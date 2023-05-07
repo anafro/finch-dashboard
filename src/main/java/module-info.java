@@ -6,7 +6,6 @@ module ru.anafro.finch.finchrobotproject {
         requires org.controlsfx.controls;
                 requires net.synedra.validatorfx;
             requires org.kordamp.ikonli.javafx;
-                requires eu.hansolo.tilesfx;
         
     opens ru.anafro.finch.finchrobotproject to javafx.fxml;
     exports ru.anafro.finch.finchrobotproject;
