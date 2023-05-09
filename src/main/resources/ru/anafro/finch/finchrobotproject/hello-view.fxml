@@ -18,14 +18,14 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="683.0" spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/19" fx:controller="ru.anafro.finch.finchrobotproject.HelloController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="693.0" spacing="20.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.anafro.finch.finchrobotproject.HelloController">
   <padding>
     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
   </padding>
    <children>
-      <SplitPane dividerPositions="0.08964365256124723" orientation="VERTICAL" prefHeight="434.0" prefWidth="560.0">
+      <SplitPane id="split-pane" dividerPositions="0.0896" orientation="VERTICAL" prefHeight="434.0" prefWidth="560.0">
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+          <AnchorPane id="top-pane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
                   <HBox alignment="CENTER" layoutY="-1.0" prefHeight="30.0" prefWidth="643.0">
                      <children>
@@ -38,7 +38,7 @@
                   </HBox>
                </children>
             </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+          <AnchorPane id="bottom-pane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
                   <ColorPicker layoutX="39.0" layoutY="274.0" />
                   <Label layoutX="39.0" layoutY="250.0" text="Left light" />
