@@ -22,6 +22,9 @@ public class HelloApplication extends Application {
         stage.setTitle("Finch Robot - Control panel");
         stage.setScene(scene);
 
+        //Control from keyboard
+        FinchController finchController = new FinchController(scene);
+
         // Disabling the split pane division changing:
         SplitPane splitPane = (SplitPane) scene.lookup("#split-pane");
         AnchorPane topPane = (AnchorPane) splitPane.getItems().get(0);
