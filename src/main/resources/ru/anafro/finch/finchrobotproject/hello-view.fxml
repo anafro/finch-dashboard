@@ -29,11 +29,11 @@
                <children>
                   <HBox alignment="CENTER" layoutY="-1.0" prefHeight="30.0" prefWidth="643.0">
                      <children>
-                        <Label style="-fx-label-padding: 5px;" text="Light Left: 60%" />
-                        <Label style="-fx-label-padding: 5px;" text="Light Right: 60%" />
-                        <Label style="-fx-label-padding: 5px;" text="Compass: 283 degrees" />
-                        <Label style="-fx-label-padding: 5px;" text="Distance to obstacle: 53 cm" />
-                        <Label style="-fx-label-padding: 5px;" text="Speed: 50%" />
+                        <Label style="-fx-label-padding: 5px;" text="Light Left: 60%" fx:id="labelLightLeft" />
+                        <Label style="-fx-label-padding: 5px;" text="Light Right: 60%" fx:id="labelLightRight" />
+                        <Label style="-fx-label-padding: 5px;" text="Compass: 283 degrees"  fx:id="labelCompass"/>
+                        <Label style="-fx-label-padding: 5px;" text="Distance to obstacle: 53 cm"  fx:id="labelDistance" />
+                        <Label style="-fx-label-padding: 5px;" text="Speed: 50%"  fx:id="labelSpeed"/>
                      </children>
                   </HBox>
                </children>

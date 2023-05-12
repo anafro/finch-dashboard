@@ -10,8 +10,12 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class HelloApplication extends Application {
+    public static Finch finch;
+
     @Override
     public void start(Stage stage) throws IOException {
+        finch = new Finch("A"); //TODO Cycle while for await finch
+
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setResizable(false);
