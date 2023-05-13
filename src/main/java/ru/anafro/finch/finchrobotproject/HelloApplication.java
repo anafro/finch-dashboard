@@ -15,15 +15,14 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         finch = new Finch("A"); //TODO Cycle while for await finch
-
+        if(finch.isConnectionValid())
+            System.out.println("Robot connected");
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setResizable(false);
         stage.setTitle("Finch Robot - Control panel");
         stage.setScene(scene);
 
-        //Control from keyboard
-        FinchController finchController = new FinchController(scene);
 
         // Disabling the split pane division changing:
         SplitPane splitPane = (SplitPane) scene.lookup("#split-pane");
@@ -32,6 +31,10 @@ public class HelloApplication extends Application {
         topPane.minHeightProperty().bind(splitPane.heightProperty().multiply(0.085));
 
         stage.show();
+
+        //Control from keyboard
+        FinchController finchController = new FinchController(scene);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> finch.setMotors(0,0)));
     }
 
     public static void main(String[] args) {

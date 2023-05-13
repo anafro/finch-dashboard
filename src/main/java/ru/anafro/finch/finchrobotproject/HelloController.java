@@ -38,23 +38,21 @@ public class HelloController implements Initializable {
             }
 
             labelLightLeft.setText("Light Left: " + finch.getLight("Left") + "%");
-            labelLightRight.setText("Light Right: " + finch.getLight("Right") + "%");
+            labelLightRight.setText("Right: " + finch.getLight("Right") + "%");
             labelCompass.setText("Compass: " + finch.getCompass() + " degrees");
-            labelDistance.setText("Distance to obstacle: " + finch.getDistance() + " cm");
-
-            double[] acceleration = finch.getAcceleration();
-            double fSpeed = Math.sqrt(Math.pow(acceleration[0], 2) + Math.pow(acceleration[1], 2) + Math.pow(acceleration[2], 2));
-            labelSpeed.setText("Speed: " + fSpeed + " value");
-
-            Sleep(200);
-            UpdateStats();
+            labelDistance.setText("Distance: " + finch.getDistance() + " cm");
+            labelSpeed.setText("Speed: " + FinchController.speed + " ups");
+            FinchController.CheckDistance();
         });
+
+        Sleep(200);
+        UpdateStats();
     }
 
     /**
      * @param time time for sleep in milliseconds
      */
-    static void Sleep(int time)
+    public static void Sleep(int time)
     {
         try {
             Thread.sleep(time);
