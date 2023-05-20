@@ -7,6 +7,7 @@ package ru.anafro.finch.finchrobotproject;
  *
  * Krissie Lauwers, BirdBrain Technologies LLC
  * October 2019
+ * modified by ManFiZz
  */
 public class Finch extends Robot {
 
@@ -21,7 +22,7 @@ public class Finch extends Robot {
     /**
      * Default constructor for the library. Set the default device to be A.
      */
-    public Finch() {
+    public Finch() throws Exception {
         this("A");
     }
 
@@ -31,26 +32,23 @@ public class Finch extends Robot {
      * @param device The letter corresponding to the Hummingbird device, which much be "A", "B", or "C".
      * The letter that identifies the Hummingbird device is assigned by the BlueBird Connector.
      */
-    public Finch(String device) {
-        if (!((device == "A")||(device == "B")||(device == "C"))) {
-            System.out.println("Error: Device must be A, B, or C.");
-            System.exit(0);
-        } else {
-            deviceInstance = device;
-            if (!isConnectionValid()) System.exit(0);
-            if (!isFinch()) System.exit(0);
+    public Finch(String device) throws Exception {
+        if (!(device.equals("A") || device.equals("B") || device.equals("C")))
+            throw new Exception("Device must be A, B or C.");
 
-            //The finch has separate requests for these so that the results returned
-            // are in the finch reference frame.
-            magRequest = "finchMag";
-            accelRequest = "finchAccel";
-            compassRequest = "finchCompass/static";
-        }
+        deviceInstance = device;
+        if (!isConnectionValid() || !isFinch())
+            throw new Exception("Connection failed");
+
+        //The finch has separate requests for these so that the results returned
+        // are in the finch reference frame.
+        magRequest = "finchMag";
+        accelRequest = "finchAccel";
+        compassRequest = "finchCompass/static";
     }
 
     /**
-     * This function sends a request to BlueBird Connector to determine whether or not
-     * the device is a Finch.
+     * This function sends a request to BlueBird Connector to determine whether the device is a Finch.
      */
     private boolean isFinch() {
         StringBuilder newURL = new StringBuilder(baseUrl);
@@ -59,10 +57,10 @@ public class Finch extends Robot {
 
         String stringResponse = sendHttpRequest(testURL);
         if (stringResponse.equals("false")) {
-            System.out.println("Error: Device " + deviceInstance + " is not a Finch");
+            System.out.println("Device " + deviceInstance + " is not a Finch");
             return false;
         } else if (stringResponse.equals("Not Connected")) {
-            System.out.println("Error: Device " + deviceInstance + " is not connected.");
+            System.out.println("Device " + deviceInstance + " is not connected.");
             return false;
         } else {
             return true;

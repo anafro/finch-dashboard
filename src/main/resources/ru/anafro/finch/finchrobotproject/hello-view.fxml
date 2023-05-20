@@ -1,24 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.LineChart?>
-<?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.chart.PieChart?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ColorPicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="693.0" spacing="20.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.anafro.finch.finchrobotproject.HelloController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="693.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.anafro.finch.finchrobotproject.WindowController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
@@ -29,11 +18,11 @@
                     <children>
                         <HBox alignment="CENTER" layoutY="-1.0" prefHeight="30.0" prefWidth="643.0">
                             <children>
-                                <Label style="-fx-label-padding: 5px;" text="Light Left: 60%" fx:id="labelLightLeft" />
-                                <Label style="-fx-label-padding: 5px;" text="Light Right: 60%" fx:id="labelLightRight" />
-                                <Label style="-fx-label-padding: 5px;" text="Compass: 283 degrees"  fx:id="labelCompass"/>
-                                <Label style="-fx-label-padding: 5px;" text="Distance to obstacle: 53 cm"  fx:id="labelDistance" />
-                                <Label style="-fx-label-padding: 5px;" text="Speed: 50%"  fx:id="labelSpeed"/>
+                                <Label fx:id="labelLightLeft" style="-fx-label-padding: 5px;" text="Light Left: 60%" />
+                                <Label fx:id="labelLightRight" style="-fx-label-padding: 5px;" text="Light Right: 60%" />
+                                <Label fx:id="labelCompass" style="-fx-label-padding: 5px;" text="Compass: 283 degrees" />
+                                <Label fx:id="labelDistance" style="-fx-label-padding: 5px;" text="Distance to obstacle: 53 cm" />
+                                <Label fx:id="labelSpeed" style="-fx-label-padding: 5px;" text="Speed: 50%" />
                             </children>
                         </HBox>
                     </children>
@@ -56,35 +45,38 @@
                                 <NumberAxis side="LEFT" />
                             </yAxis>
                         </LineChart>
+                  <Line fx:id="distanceLine" endX="102.0" endY="141.0" layoutX="154.0" layoutY="61.0" startX="-100.0" startY="141.0" stroke="#e80000" strokeLineCap="ROUND" strokeWidth="2.0" />
                         <Label layoutX="47.0" layoutY="30.0" text="Distance to obstacle" />
                         <CheckBox layoutX="479.0" layoutY="121.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="122.0" text="Safe mode" />
                         <Button layoutX="481.0" layoutY="149.0" mnemonicParsing="false" text="What is Safe mode?" />
                         <Button fx:id="TurnOffButton" layoutX="480.0" layoutY="184.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="121.0" text="Turn off the lights" />
-                        <PieChart layoutX="269.0" layoutY="57.0" prefHeight="109.0" prefWidth="200.0" />
                         <Label layoutX="269.0" layoutY="30.0" text="Compass" />
-                        <HBox alignment="CENTER" layoutX="469.0" layoutY="52.0" prefHeight="18.0" prefWidth="158.0" spacing="10.0">
-                            <children>
-                                <Circle fx:id="TopCircleColor1" fill="#b6dcff" radius="9.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-                                <Circle fx:id="TopCircleColor2" fill="#ffb8fd" radius="9.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-                                <Circle fx:id="TopCircleColor3" fill="#b6dcff" radius="9.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-                                <Circle fx:id="TopCircleColor4" fill="#cfb8ff" radius="9.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-                            </children>
-                        </HBox>
-                        <HBox alignment="CENTER" layoutX="469.0" layoutY="74.0" prefHeight="18.0" prefWidth="158.0" spacing="10.0">
-                            <children>
-                                <Circle fx:id="LeftCircleColor" fill="#b6dcff" radius="9.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-                                <Circle fx:id="RightCircleColor" fill="#37c748" radius="9.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-                            </children>
-                        </HBox>
+                  <AnchorPane layoutX="479.0" layoutY="49.0" prefHeight="63.0" prefWidth="79.0">
+                     <children>
+                              <HBox alignment="CENTER" layoutX="21.0" layoutY="14.0" prefHeight="20.0" prefWidth="64.0" spacing="10.0">
+                                  <children>
+                                      <Circle fx:id="TopCircleColor1" fill="#b6dcff" radius="10.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                                  </children>
+                              </HBox>
+                              <HBox alignment="CENTER" layoutX="17.0" layoutY="32.0" prefHeight="18.0" prefWidth="72.0" spacing="10.0">
+                                  <children>
+                                      <Circle fx:id="LeftCircleColor" fill="#b6dcff" radius="9.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                                      <Circle fx:id="RightCircleColor" fill="#37c748" radius="9.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                                  </children>
+                              </HBox>
+                     </children>
+                  </AnchorPane>
                         <Label layoutX="477.0" layoutY="30.0" text="Lights" />
                         <Label layoutX="61.0" layoutY="304.0" text="W - move forward, S - move backward, A - turn left, D - turn right, Q - speed+, E - speed-, F - turn on/off the lights, X - turn on/off the Safe mode">
                             <font>
                                 <Font size="8.0" />
                             </font>
                         </Label>
-                        <ProgressBar layoutX="86.0" layoutY="214.0" prefHeight="26.0" prefWidth="170.0" />
+                        <ProgressBar fx:id="progressBar" layoutX="86.0" layoutY="214.0" prefHeight="26.0" prefWidth="170.0" />
                         <Label layoutX="38.0" layoutY="218.0" text="Speed" />
                         <Spinner editable="true" layoutX="269.0" layoutY="214.0" prefHeight="18.0" prefWidth="64.0" />
+                  <Circle fill="#ff1f1f" layoutX="370.0" layoutY="130.0" radius="80.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Arc fx:id="arc" fill="DODGERBLUE" layoutX="370.0" layoutY="129.0" length="330.0" radiusX="82.0" radiusY="82.0" startAngle="105.0" stroke="BLACK" strokeType="INSIDE" type="ROUND" />
                     </children>
                 </AnchorPane>
             </items>

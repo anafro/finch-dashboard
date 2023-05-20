@@ -13,6 +13,7 @@ import java.net.URL;
  * 
  * Mike Yuan and Bambi Breewer, BirdBrain Technologies LLC
  * November 2018
+ * modified by ManFiZz
  */
 abstract class Robot {
 	// Variables used to make http request to control the micro:bit (and Hummingbird Bit)
@@ -41,7 +42,7 @@ abstract class Robot {
 	protected String compassRequest = "Compass";
 
     
-    /* This function tests a connection by attempting to read whether or not the micro:bit is shaking. 
+    /* This function tests a connection by attempting to read whether the micro:bit is shaking.
      * Return true if the connection is good and false otherwise. 
      */
     protected boolean isConnectionValid() {
@@ -53,11 +54,7 @@ abstract class Robot {
                  .append(deviceInstance)).toString();
 
         String stringResponse = sendHttpRequest(testURL);
-        if (stringResponse.equals("Not Connected")) {
-            return false;
-        } else {
-            return true;
-        }
+        return !stringResponse.equals("Not Connected");
     }
     
     /* This function checks whether an input parameter is within the given bounds. If not, it prints

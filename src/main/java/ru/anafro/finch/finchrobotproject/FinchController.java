@@ -1,37 +1,36 @@
 package ru.anafro.finch.finchrobotproject;
 
-import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import static javafx.scene.input.KeyCode.*;
+import static ru.anafro.finch.finchrobotproject.FinchStats.finchDistance;
+import static ru.anafro.finch.finchrobotproject.WindowApplication.currentScene;
 
 public class FinchController {
-    private static final Finch finch = HelloApplication.finch;
+    private static final Finch finch = WindowApplication.finch;
 
     private static boolean activeUp = false;
     private static boolean activeDown = false;
     private static boolean activeLeft = false;
     private static boolean activeRight = false;
-    public static int speed = 10; // Начальная скорость
+    public static int speed = 10;
 
-    public FinchController(Scene scene) {
-        finch.setMotors(0, 0); // Начальное состояние: робот стоит на месте
+    public static boolean lateLoad = false;
+    public static void Start() {
+        if(finch != null && finch.isConnectionValid()) {
+            finch.setMotors(0, 0); // Начальное состояние: робот стоит на месте
+            finch.setBeak(0, 255, 0); // Зеленый светодиод для обозначения работы робота
+            lateLoad = true;
+        }
 
-        scene.setOnKeyPressed(this::keyPressed);
-        scene.setOnKeyReleased(this::keyReleased);
-
-        finch.setBeak(0, 255, 0); // Зеленый светодиод для обозначения работы робота
-
+        currentScene.setOnKeyPressed(FinchController::keyPressed);
+        currentScene.setOnKeyReleased(FinchController::keyReleased);
     }
 
+    //TODO
     public static void CheckDistance() {
-        int distance =  finch.getDistance();
-        if(distance < 50 && distance > 0) {
+        if(finchDistance < 50 && finchDistance > 0) {
             finch.setBeak(0,0, 255);
             finch.playNote(64, 1);
         } else {
@@ -39,31 +38,31 @@ public class FinchController {
         }
     }
 
-    public void keyPressed(KeyEvent e) {
-        KeyCode code = e.getCode();
-        if(code == W || code == S || code == A || code == D) {
-            if(code == W)
-                activeUp = true;
-            else if(code == S)
-                activeDown = true;
-            else if(code == A)
-                activeLeft = true;
-            else
-                activeRight = true;
-            UpdateSpeed();
-            e.consume();
-        } else if(code == Q || code == E) {
-            if(code == Q) {
-                speed = Math.min(100, speed + 10); // Увеличение скорости на 10%
-            } else {
-                speed = Math.max(0, speed - 10); // Уменьшение скорости на 10%
-            }
-            UpdateSpeed();
-            e.consume();
+    public static void keyPressed(KeyEvent e) {
+        if(finch == null || !finch.isConnectionValid())
+            return;
+
+        if(lateLoad) {
+            finch.setBeak(0, 255, 0); // Зеленый светодиод для обозначения работы робота
+            lateLoad = false;
         }
+
+        KeyCode code = e.getCode();
+        switch (code) {
+            case W: activeUp = true; break;
+            case S: activeDown = true; break;
+            case A: activeLeft = true; break;
+            case D: activeRight = true; break;
+            case Q: speed = Math.min(100, speed + 15);  break; // Увеличение скорости на 10%
+            case E: speed = Math.max(10, speed - 15);  break; // Уменьшение скорости на 10%
+            default: return;
+        }
+
+        UpdateSpeed();
+        e.consume();
     }
 
-    public void UpdateSpeed() {
+    public static void UpdateSpeed() {
         int sLeft = 0;
         int sRight = 0;
         int count = 0;
@@ -99,7 +98,10 @@ public class FinchController {
         finch.setMotors(sLeft, sRight);
     }
 
-    public void keyReleased(KeyEvent e) {
+    public static void keyReleased(KeyEvent e) {
+        if(finch == null || !finch.isConnectionValid())
+            return;
+
         KeyCode code = e.getCode();
         if(code == W || code == A || code == S || code == D) {
             if(code == W)
