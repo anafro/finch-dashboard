@@ -5,7 +5,7 @@ import java.util.TimerTask;
 
 public class FinchStats {
     private static final int timeForTick = 200; //ms
-    private static final Finch finch = WindowApplication.finch;
+    private static Finch finch;
     public static int finchLightLeft = 0;
     public static int finchLightRight = 0;
     public static int finchAngle = 0;
@@ -13,21 +13,21 @@ public class FinchStats {
     public static double[] acceleration = new double[]{0, 0, 0};
 
     public static void StartDataCollect() {
+        finch = WindowApplication.finch;
         Timer timer = new Timer();
-        timer.schedule(UpdateStats, 0, timeForTick); //call the run() method at 1 second intervals
+        timer.schedule(UpdateStats, 400, timeForTick);
     }
 
     private static final TimerTask UpdateStats = new TimerTask() {
         @Override
         public void run() {
-            if (finch == null || !finch.isConnectionValid())
-                return;
-
-            finchLightLeft = finch.getLight("Left");
-            finchLightRight = finch.getLight("Right");
-            finchAngle = finch.getCompass();
-            finchDistance = finch.getDistance();
-            acceleration = finch.getAcceleration();
+            if (finch != null && finch.isConnectionValid()) {
+                finchLightLeft = finch.getLight("Left");
+                finchLightRight = finch.getLight("Right");
+                finchAngle = finch.getCompass();
+                finchDistance = finch.getDistance();
+                acceleration = finch.getAcceleration();
+            }
         }
     };
 }

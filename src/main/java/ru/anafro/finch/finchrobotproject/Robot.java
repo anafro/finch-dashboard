@@ -98,6 +98,7 @@ abstract class Robot {
      * @param URLRequest
      * @return String response
      */
+
 	protected String sendHttpRequest(String URLRequest) {
         long requestStartTime = System.currentTimeMillis();
 	    String responseString = "Not Connected";
@@ -127,15 +128,13 @@ abstract class Robot {
             }
 
         } catch (IOException e) {
-            System.out.println("Error sending http request: " + e.getMessage());
+            //System.out.println("Error sending http request: " + e.getMessage());
         } finally {
             if (responseString.equals("Not Connected")) {
-                System.out.println("Error: Device " + deviceInstance + " is not connected");
+                //System.out.println("Error: Device " + deviceInstance + " is not connected");
             }
-            disconnect();
+            //disconnect();
         }
-        //If too many requests get sent too quickly, macOS gets overwhelmed and starts to insert pauses.
-        while(System.currentTimeMillis() < requestStartTime + 5) {}
 
         return responseString;
 

@@ -33,11 +33,14 @@ public class WindowApplication extends Application {
     }
 
     private static void InitFinch() {
-        try {
-            finch = new Finch("A"); //TODO Cycle while for await finch
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        while(finch == null || !finch.isConnectionValid()) {
+            try {
+                finch = new Finch("A"); //TODO Cycle while for await finch
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
         }
+        System.out.println("Connection stabilized");
 
         //Collect finch stats
         FinchStats.StartDataCollect();
