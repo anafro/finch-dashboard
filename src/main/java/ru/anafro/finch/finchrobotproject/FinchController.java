@@ -18,11 +18,14 @@ public class FinchController {
 
     public static boolean lateLoad = false;
     public static void Start() {
-        if(finch != null && finch.isConnectionValid()) {
+        if(finch != null) {
             finch.setMotors(0, 0); // Начальное состояние: робот стоит на месте
             finch.setBeak(0, 255, 0); // Зеленый светодиод для обозначения работы робота
             lateLoad = true;
         }
+
+        //Collect finch stats
+        FinchStats.StartDataCollect();
 
         currentScene.setOnKeyPressed(FinchController::keyPressed);
         currentScene.setOnKeyReleased(FinchController::keyReleased);
@@ -39,7 +42,7 @@ public class FinchController {
     }
 
     public static void keyPressed(KeyEvent e) {
-        if(finch == null || !finch.isConnectionValid())
+        if(finch == null)
             return;
 
         if(lateLoad) {
@@ -49,15 +52,41 @@ public class FinchController {
 
         KeyCode code = e.getCode();
         switch (code) {
-            case W: activeUp = true; break;
-            case S: activeDown = true; break;
-            case A: activeLeft = true; break;
-            case D: activeRight = true; break;
-            case Q: speed = Math.min(100, speed + 15);  break; // Увеличение скорости на 10%
-            case E: speed = Math.max(10, speed - 15);  break; // Уменьшение скорости на 10%
+            case W: {
+                if(activeUp) return;
+                activeUp = true;
+                break;
+            }
+            case S: {
+                if(activeDown) return;
+                activeDown = true;
+                break;
+            }
+            case A: {
+                if(activeLeft) return;
+                activeLeft = true;
+                break;
+            }
+            case D: {
+                if(activeRight) return;
+                activeRight = true;
+                break;
+            }
+            case Q: {
+                if(speed == Math.min(100, speed + 15))
+                    return;
+
+                speed = Math.min(100, speed + 15);
+                break;
+            } // Увеличение скорости на 10%
+            case E: {
+                if(speed == Math.max(10, speed - 15))
+                    return;
+                speed = Math.max(10, speed - 15);
+                break;
+            } // Уменьшение скорости на 10%
             default: return;
         }
-
         UpdateSpeed();
         e.consume();
     }
@@ -96,10 +125,11 @@ public class FinchController {
         }
 
         finch.setMotors(sLeft, sRight);
-    }
+        //System.out.println("" + activeUp + " " + activeDown + " " + activeLeft + " " + activeRight);
+}
 
     public static void keyReleased(KeyEvent e) {
-        if(finch == null || !finch.isConnectionValid())
+        if(finch == null)
             return;
 
         KeyCode code = e.getCode();

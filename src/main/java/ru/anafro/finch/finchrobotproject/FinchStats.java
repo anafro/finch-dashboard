@@ -4,7 +4,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class FinchStats {
-    private static final int timeForTick = 200; //ms
+    private static final int timeForTick = 500; //ms
     private static Finch finch;
     public static int finchLightLeft = 0;
     public static int finchLightRight = 0;
@@ -21,7 +21,7 @@ public class FinchStats {
     private static final TimerTask UpdateStats = new TimerTask() {
         @Override
         public void run() {
-            if (finch != null && finch.isConnectionValid()) {
+            if (finch != null) {
                 finchLightLeft = finch.getLight("Left");
                 finchLightRight = finch.getLight("Right");
                 finchAngle = finch.getCompass();

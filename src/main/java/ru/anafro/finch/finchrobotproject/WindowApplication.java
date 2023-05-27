@@ -42,15 +42,12 @@ public class WindowApplication extends Application {
         }
         System.out.println("Connection stabilized");
 
-        //Collect finch stats
-        FinchStats.StartDataCollect();
-
         //Control from keyboard
         FinchController.Start();
 
         //On program end stop finch motors
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if(finch != null && finch.isConnectionValid())
+            if(finch != null)
                 finch.setMotors(0,0);
         }));
     }

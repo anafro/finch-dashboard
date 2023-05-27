@@ -1,5 +1,6 @@
 package ru.anafro.finch.finchrobotproject;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -93,12 +94,12 @@ abstract class Robot {
         return url.substring(0, url.length() - 1); //remove the trailing '/'
     }
 
+
     /**
      * General function for sending an http request and returning the response
-     * @param URLRequest
+     * @param URLRequest request for sending
      * @return String response
      */
-
 	protected String sendHttpRequest(String URLRequest) {
         long requestStartTime = System.currentTimeMillis();
 	    String responseString = "Not Connected";
@@ -106,14 +107,12 @@ abstract class Robot {
             requestUrl = new URL(URLRequest);
             connection = (HttpURLConnection) requestUrl.openConnection();
             connection.setRequestMethod("GET");
-            //connection.setDoOutput(true);
 
             int responseCode = connection.getResponseCode();
             if (responseCode == 200) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(
-                        connection.getInputStream()));
+                var in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 String inputLine;
-                StringBuffer response = new StringBuffer();
+                var response = new StringBuilder();
 
                 while ((inputLine = in.readLine()) != null) {
                     response.append(inputLine);
@@ -124,20 +123,27 @@ abstract class Robot {
                     responseString = response.toString();
                 }
             } else {
-                System.out.println(inputError);
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                System.out.println(inputLine);
             }
-
-        } catch (IOException e) {
-            //System.out.println("Error sending http request: " + e.getMessage());
+        } catch (IOException | NullPointerException e) {
+            System.out.println("Error sending http request: " + e.getMessage());
         } finally {
             if (responseString.equals("Not Connected")) {
-                //System.out.println("Error: Device " + deviceInstance + " is not connected");
+                System.out.println("Error: Device " + deviceInstance + " is not connected");
             }
-            //disconnect();
+            disconnect();
         }
+        //If too many requests get sent too quickly, macOS gets overwhelmed and starts to insert pauses.
+        while(System.currentTimeMillis() < requestStartTime + 15) {}
 
         return responseString;
-
 	}
 
 	/* This function sends http requests that set outputs (lights, motors, buzzer, 
@@ -153,7 +159,7 @@ abstract class Robot {
             double value = Double.parseDouble(stringResponse);
             return value;
         } catch(Exception e) {
-            System.out.println("Error: " + stringResponse);
+            System.out.println("Error in double: " + stringResponse);
             return -1;
         }
     }
@@ -163,7 +169,7 @@ abstract class Robot {
         String stringResponse = sendHttpRequest(URLRequest);
         if (!stringResponse.equalsIgnoreCase("true")
                 && !stringResponse.equalsIgnoreCase("false")) {
-            System.out.println("Error: " + stringResponse);
+            System.out.println("Error in double: " + stringResponse);
             return false;
         } else {
             return (stringResponse.equalsIgnoreCase("true"));
