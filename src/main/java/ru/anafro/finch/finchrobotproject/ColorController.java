@@ -3,8 +3,9 @@ package ru.anafro.finch.finchrobotproject;
 
 import javafx.scene.paint.Color;
 
+import static ru.anafro.finch.finchrobotproject.WindowApplication.finch;
+
 public class ColorController {
-    private static final Finch finch = WindowApplication.finch;
 
     public void SetFrontLight (Color currentColor) {
         //the color is from the ui is between 0 and 1

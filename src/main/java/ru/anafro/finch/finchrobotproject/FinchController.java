@@ -3,6 +3,10 @@ package ru.anafro.finch.finchrobotproject;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import static javafx.scene.input.KeyCode.*;
 import static ru.anafro.finch.finchrobotproject.FinchStats.finchDistance;
 import static ru.anafro.finch.finchrobotproject.WindowApplication.currentScene;
@@ -31,6 +35,7 @@ public class FinchController {
         currentScene.setOnKeyReleased(FinchController::keyReleased);
     }
 
+    private static boolean isShooting = false;
     //TODO
     public static void CheckDistance() {
         if(finchDistance < 50 && finchDistance > 0) {
@@ -41,6 +46,7 @@ public class FinchController {
         }
     }
 
+    private static Random rnd = new Random();
     public static void keyPressed(KeyEvent e) {
         if(finch == null)
             return;
@@ -72,24 +78,48 @@ public class FinchController {
                 activeRight = true;
                 break;
             }
-            case Q: {
+            case E: {
                 if(speed == Math.min(100, speed + 15))
                     return;
 
                 speed = Math.min(100, speed + 15);
                 break;
             } // Увеличение скорости на 10%
-            case E: {
+            case Q: {
                 if(speed == Math.max(10, speed - 15))
                     return;
                 speed = Math.max(10, speed - 15);
                 break;
             } // Уменьшение скорости на 10%
+            case TAB: {
+                if(!isShooting) {
+                    System.out.println("here");
+                    isShooting = true;
+                    finch.playNote(90, 1);
+                    finch.setBeak(255, 0, 0);
+                    final TimerTask StableTail = new TimerTask() {
+                        @Override
+                        public void run() {
+                            finch.setBeak(0, 255, 0);
+                            timerIsActive = false;
+                        }
+                    };
+                    timer.schedule(StableTail, 1000);
+                    timerIsActive = true;
+                }
+
+                e.consume();
+                return;
+            }
             default: return;
         }
         UpdateSpeed();
         e.consume();
     }
+    private static int counter = 0;
+
+    private static Timer timer = new Timer();
+    private static boolean timerIsActive = false;
 
     public static void UpdateSpeed() {
         int sLeft = 0;
@@ -133,15 +163,20 @@ public class FinchController {
             return;
 
         KeyCode code = e.getCode();
-        if(code == W || code == A || code == S || code == D) {
+        if(code == W || code == A || code == S || code == D || code == TAB) {
             if(code == W)
                 activeUp = false;
             else if(code == S)
                 activeDown = false;
             else if(code == A)
                 activeLeft = false;
-            else
+            else if(code == D)
                 activeRight = false;
+            else if(code == TAB) {
+                    isShooting = false;
+                    e.consume();
+                    return;
+            }
             UpdateSpeed();
             e.consume();
         }
