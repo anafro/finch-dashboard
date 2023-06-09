@@ -7,27 +7,30 @@ import static ru.anafro.finch.finchrobotproject.WindowApplication.finch;
 
 public class ColorController {
 
-    public void SetFrontLight (Color currentColor) {
+    private static int[] GetUIColor(Color colorPicker) {
         //the color is from the ui is between 0 and 1
-        double Red = Math.round((100)*currentColor.getRed());
-        double Green = Math.round((100)*currentColor.getGreen());
-        double Blue = Math.round((100)*currentColor.getBlue());
-        finch.setBeak((int)Red,(int)Green,(int)Blue);
-        /*color test stuff
-        System.out.println("R : " + LeftCurrentColor.getRed() + " G : " + LeftCurrentColor.getGreen() + " B : " + LeftCurrentColor.getBlue());
-        System.out.println("R : " + (int)Red + " G : " + (int)Green + " B : " + (int)Blue + "\n");
-        */
+        return new int[] {
+                (int) Math.round(100 * colorPicker.getRed()),
+                (int) Math.round(100 * colorPicker.getGreen()),
+                (int) Math.round(100 * colorPicker.getBlue())
+        };
     }
 
-    public void SetBackLight (Color currentColor) {
-        //the color is from the ui is between 0 and 1
-        double Red = Math.round((100)*currentColor.getRed());
-        double Green = Math.round((100)*currentColor.getGreen());
-        double Blue = Math.round((100)*currentColor.getBlue());
-        finch.setTail("all", (int)Red,(int)Green,(int)Blue);
+    private static int[] FrontLight = new int[] {0, 255, 0};
+    public static void SetFrontLight (Color colorPicker) {
+        if(colorPicker != null)
+            FrontLight = GetUIColor(colorPicker);
+        finch.setBeak(FrontLight[0], FrontLight[1], FrontLight[2]);
     }
 
-    public void TurnOffLight () {
+    private static int[] BackLight = new int[] {0, 0, 0};
+    public static void SetBackLight (Color colorPicker) {
+        if(colorPicker != null)
+            BackLight = GetUIColor(colorPicker);
+        finch.setTail("all", BackLight[0], BackLight[1], BackLight[2]);
+    }
+
+    public static void TurnOffLight () {
         finch.setBeak(0, 0, 0);
         finch.setTail("all",0, 0, 0);
     }

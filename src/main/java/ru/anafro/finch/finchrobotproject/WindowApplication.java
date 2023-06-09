@@ -10,8 +10,12 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class WindowApplication extends Application {
+
+    public static boolean WITHOUT_FINCH = true;
     public static Finch finch = null;
     public static Scene currentScene = null;
+
+    public static WindowController windowController;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -30,12 +34,18 @@ public class WindowApplication extends Application {
         stage.show();
 
         InitFinch();
+        Test.Start();
     }
 
     private static void InitFinch() {
-        while(finch == null || !finch.isConnectionValid()) {
+        if(WITHOUT_FINCH) {
+            System.out.println("Start without finch");
+            return;
+        }
+
+        while (finch == null || !finch.isConnectionValid()) {
             try {
-                finch = new Finch("A"); //TODO Cycle while for await finch
+                finch = new Finch("A");
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }

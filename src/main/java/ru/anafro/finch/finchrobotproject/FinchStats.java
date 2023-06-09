@@ -10,7 +10,6 @@ public class FinchStats {
     public static int finchLightRight = 0;
     public static int finchAngle = 0;
     public static int finchDistance = 0;
-    public static double[] acceleration = new double[]{0, 0, 0};
 
     public static void StartDataCollect() {
         finch = WindowApplication.finch;
@@ -26,7 +25,7 @@ public class FinchStats {
                 finchLightRight = finch.getLight("Right");
                 finchAngle = finch.getCompass();
                 finchDistance = finch.getDistance();
-                acceleration = finch.getAcceleration();
+                FinchController.CheckDistance();
             }
         }
     };
