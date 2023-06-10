@@ -20,12 +20,16 @@ public class FinchStats {
     private static final TimerTask UpdateStats = new TimerTask() {
         @Override
         public void run() {
-            if (finch != null) {
-                finchLightLeft = finch.getLight("Left");
-                finchLightRight = finch.getLight("Right");
-                finchAngle = finch.getCompass();
-                finchDistance = finch.getDistance();
-                FinchController.CheckDistance();
+            try {
+                if (finch != null) {
+                    //finchLightLeft = finch.getLight("Left");
+                    //finchLightRight = finch.getLight("Right");
+                    finchAngle = finch.getCompass();
+                    finchDistance = finch.getDistance();
+                    FinchController.CheckDistance();
+                }
+            } catch(NullPointerException e) {
+                System.out.println(e.getMessage());
             }
         }
     };

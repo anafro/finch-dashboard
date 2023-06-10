@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class WindowApplication extends Application {
 
-    public static boolean WITHOUT_FINCH = true;
+    public static boolean WITHOUT_FINCH = false;
     public static Finch finch = null;
     public static Scene currentScene = null;
 
@@ -34,7 +34,6 @@ public class WindowApplication extends Application {
         stage.show();
 
         InitFinch();
-        Test.Start();
     }
 
     private static void InitFinch() {

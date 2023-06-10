@@ -45,7 +45,7 @@ public class FinchController {
     public static void CheckDistance() {
         if(!safeMode) return;
 
-        if (finchDistance > 0 && finchDistance < 50 && finchDistance < speed) {
+        if (finchDistance > 0 && finchDistance < 75) {
             if (isAlertDistance)
                 return;
 
@@ -92,12 +92,14 @@ public class FinchController {
             case E -> {
                 e.consume();
                 if (speed == MAX_SPEED) return;
+                WindowApplication.windowController.UpdateGearbox();
                 speed = Math.min(MAX_SPEED, speed + STEP_SPEED);
                 UpdateSpeed();
             }
             case Q -> {
                 e.consume();
                 if (speed == MIN_SPEED) return;
+                WindowApplication.windowController.UpdateGearbox();
                 speed = Math.max(MIN_SPEED, speed - STEP_SPEED);
                 UpdateSpeed();
             }
@@ -125,10 +127,12 @@ public class FinchController {
                 isShooting = true;
                 finch.playNote(90, 1);
                 finch.setBeak(255, 0, 0);
+                finch.setTail("All",255, 0, 0);
                 final TimerTask StableTail = new TimerTask() {
                     @Override
                     public void run() {
-                        finch.setBeak(0, 255, 0);
+                        ColorController.SetFrontLight(null);
+                        ColorController.SetBackLight(null);
                     }
                 };
                 timer.schedule(StableTail, 1000);

@@ -9,6 +9,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Line;
@@ -21,6 +22,8 @@ import java.util.TimerTask;
 import static ru.anafro.finch.finchrobotproject.FinchStats.*;
 
 public class WindowController implements Initializable {
+    @FXML
+    public ImageView Arrow;
     @FXML
     public Line distanceLine;
     @FXML
@@ -66,11 +69,14 @@ public class WindowController implements Initializable {
 
             double finalDistanceY = distanceY;
             Platform.runLater(() -> {
-                labelLightLeft.setText("Light Left: " + finchLightLeft + "%");
-                labelLightRight.setText("Light Right: " + finchLightRight + "%");
-                if(finchAngle >= 0)
-                    arc.setRotate(finchAngle);
-                if(finchDistance >= 0) {
+                if (finchLightLeft >= 0)
+                    labelLightLeft.setText("Light Left: " + finchLightLeft + "%");
+                if (finchLightRight >= 0)
+                    labelLightRight.setText("Light Right: " + finchLightRight + "%");
+
+                if (finchAngle >= 0)
+                    Arrow.setRotate((163 + finchAngle) % 360);
+                if (finchDistance >= 0) {
                     distanceLine.setStartY(finalDistanceY);
                     distanceLine.setEndY(finalDistanceY);
                 }
