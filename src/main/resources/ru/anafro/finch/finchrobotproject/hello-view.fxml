@@ -3,6 +3,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
@@ -21,12 +22,12 @@
             </HBox>
         </AnchorPane>
         <AnchorPane id="bottom-pane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-            <ColorPicker fx:id="LeftColorPicker" layoutX="207.0" layoutY="271.0"/>
-            <Label layoutX="210.0" layoutY="247.0" text="Left light"/>
-            <ColorPicker fx:id="RightColorPicker" layoutX="341.0" layoutY="271.0"/>
-            <Label layoutX="348.0" layoutY="247.0" text="Right light"/>
-            <ColorPicker fx:id="AllColorPicker" layoutX="478.0" layoutY="271.0"/>
-            <Label layoutX="478.0" layoutY="247.0" text="All lights"/>
+            <ColorPicker fx:id="BeakColorPicker" layoutX="484.0" layoutY="115.0"/>
+            <Label layoutX="484.0" layoutY="98.0" text="Beak light"/>
+            <ColorPicker fx:id="TailColorPicker" layoutX="484.0" layoutY="164.0"/>
+            <Label layoutX="484.0" layoutY="149.0" text="Tail light"/>
+            <ColorPicker fx:id="AllColorPicker" layoutX="484.0" layoutY="54.0"/>
+            <Label layoutX="484.0" layoutY="39.0" text="All lights"/>
             <LineChart layoutX="15.0" layoutY="60.0" prefHeight="250.0" prefWidth="180.0">
                 <xAxis>
                     <CategoryAxis side="BOTTOM"/>
@@ -38,40 +39,33 @@
             <Line fx:id="distanceLine" endX="47.0" endY="15.0" layoutX="154.0" layoutY="61.0" startX="-100.0"
                   startY="15.0" stroke="#e80000" strokeLineCap="ROUND" strokeWidth="2.0"/>
             <Label layoutX="47.0" layoutY="30.0" text="Distance to obstacle"/>
-            <CheckBox fx:id="safeModeCheckBox" layoutX="480.0" layoutY="66.0" mnemonicParsing="false"
-                      prefHeight="18.0" prefWidth="122.0" text="Safe mode"/>
-            <Button fx:id="TurnOffButton" layoutX="480.0" layoutY="184.0" mnemonicParsing="false"
-                    prefHeight="26.0" prefWidth="121.0" text="Turn off the lights"/>
-            <Label layoutX="308.0" layoutY="39.0" text="Compass"/>
-            <AnchorPane layoutX="480.0" layoutY="109.0" prefHeight="63.0" prefWidth="79.0">
-                <HBox alignment="CENTER" layoutX="21.0" layoutY="14.0" prefHeight="20.0" prefWidth="64.0"
-                      spacing="10.0">
-                    <Circle fx:id="TopCircleColor1" fill="#b6dcff" radius="10.0" stroke="BLACK"
-                            strokeType="INSIDE" strokeWidth="0.0"/>
-                </HBox>
-                <HBox alignment="CENTER" layoutX="17.0" layoutY="32.0" prefHeight="18.0" prefWidth="72.0"
-                      spacing="10.0">
-                    <Circle fx:id="LeftCircleColor" fill="#b6dcff" radius="9.0" stroke="BLACK"
-                            strokeType="INSIDE" strokeWidth="0.0"/>
-                    <Circle fx:id="RightCircleColor" fill="#37c748" radius="9.0" stroke="BLACK"
-                            strokeType="INSIDE" strokeWidth="0.0"/>
-                </HBox>
-            </AnchorPane>
-            <Label layoutX="478.0" layoutY="101.0" text="Lights"/>
-            <Label layoutX="61.0" layoutY="304.0"
-                   text="W - move forward, S - move backward, A - turn left, D - turn right, Q - speed+, E - speed-, F - turn on/off the lights, X - turn on/off the Safe mode"
-                   textFill="#0000006a">
+            <CheckBox fx:id="safeModeCheckBox" layoutX="545.0" layoutY="259.0" mnemonicParsing="false" prefHeight="18.0"
+                      prefWidth="82.0" text="Safe mode"/>
+            <Label layoutX="308.0" layoutY="30.0" text="Compass"/>
+            <Label layoutX="22.0" layoutY="299.0" prefHeight="20.0" prefWidth="611.0"
+                   text="WASD - movement , QE - gear shifting, F - switch the lights, X - switch the Safe mode, TAB - Laser"
+                   textFill="#000000b3">
                 <font>
-                    <Font size="8.0"/>
+                    <Font size="14.0"/>
                 </font>
             </Label>
-            <ProgressBar fx:id="progressBar" layoutX="149.0" layoutY="139.0" prefHeight="20.0" prefWidth="170.0"
+            <ProgressBar fx:id="progressBar" layoutX="122.0" layoutY="165.0" prefHeight="23.0" prefWidth="226.0"
                          progress="0.1" rotate="-90.0"/>
             <Label layoutX="212.0" layoutY="30.0" text="Gearbox"/>
-            <Circle fill="#ff1f1f" layoutX="366.0" layoutY="148.0" radius="80.0" stroke="BLACK"
-                    strokeType="INSIDE"/>
-            <Arc fx:id="arc" fill="DODGERBLUE" layoutX="366.0" layoutY="147.0" length="330.0" radiusX="82.0"
+            <Circle fill="#ff1f1f" layoutX="365.0" layoutY="165.0" radius="80.0" stroke="BLACK" strokeType="INSIDE"/>
+            <Arc fx:id="arc" fill="DODGERBLUE" layoutX="365.0" layoutY="164.0" length="330.0" radiusX="82.0"
                  radiusY="82.0" startAngle="105.0" stroke="BLACK" strokeType="INSIDE" type="ROUND"/>
+            <ImageView fitHeight="205.0" fitWidth="200.0" layoutX="270.0" layoutY="64.0" pickOnBounds="true"
+                       preserveRatio="true">
+                <Image url="@compass.png"/>
+            </ImageView>
+            <ImageView fitHeight="205.0" fitWidth="200.0" layoutX="270.0" layoutY="64.0" pickOnBounds="true"
+                       preserveRatio="true" rotate="162.8">
+                <!--TODO-->
+                <Image url="@compass_arrow.png"/>
+            </ImageView>
+            <CheckBox fx:id="switchLightCheckBox" layoutX="484.0" layoutY="259.0" mnemonicParsing="false"
+                      prefHeight="18.0" prefWidth="56.0" text="Light"/>
         </AnchorPane>
     </SplitPane>
 </VBox>

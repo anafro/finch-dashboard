@@ -5,10 +5,12 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
 import java.net.URL;
@@ -29,27 +31,18 @@ public class WindowController implements Initializable {
     private Label labelLightLeft;
     @FXML
     private Label labelLightRight;
-
     @FXML
-    Circle LeftCircleColor = new Circle();
+    ColorPicker BeakColorPicker;
     @FXML
-    Circle RightCircleColor = new Circle();
+    ColorPicker TailColorPicker;
     @FXML
-    Circle TopCircleColor1 = new Circle();
-    @FXML
-    ColorPicker LeftColorPicker = new ColorPicker();
-    @FXML
-    ColorPicker RightColorPicker = new ColorPicker();
-    @FXML
-    ColorPicker AllColorPicker = new ColorPicker();
-    @FXML
-    Button TurnOffButton = new Button();
-
+    ColorPicker AllColorPicker;
     @FXML
     NumberAxis yAxis;
-
     @FXML
     CheckBox safeModeCheckBox;
+    @FXML
+    CheckBox switchLightCheckBox;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -93,31 +86,19 @@ public class WindowController implements Initializable {
 
     public void HookLightUI() {
         safeModeCheckBox.selectedProperty().addListener(
-        (ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) -> FinchController.safeMode = new_val);
+                (ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) -> FinchController.safeMode = new_val);
 
-        LeftColorPicker.setOnAction(actionEvent -> {
-            Color LeftCurrentColor = LeftColorPicker.getValue();
-            LeftCircleColor.setFill(LeftCurrentColor);
-            ColorController.SetFrontLight(LeftCurrentColor);
-        });
+        BeakColorPicker.setOnAction(actionEvent -> ColorController.SetFrontLight(BeakColorPicker.getValue()));
 
-        RightColorPicker.setOnAction(actionEvent -> {
-            Color RightCurrentColor = RightColorPicker.getValue();
-            RightCircleColor.setFill(RightCurrentColor);
-            ColorController.SetBackLight(RightCurrentColor);
-        });
+        TailColorPicker.setOnAction(actionEvent -> ColorController.SetBackLight(TailColorPicker.getValue()));
 
         AllColorPicker.setOnAction(actionEvent -> {
             Color CurrentColor = AllColorPicker.getValue();
-            RightCircleColor.setFill(CurrentColor);
-            LeftCircleColor.setFill(CurrentColor);
-            TopCircleColor1.setFill(CurrentColor);
-            RightColorPicker.setValue(CurrentColor);
-            LeftColorPicker.setValue(CurrentColor);
             ColorController.SetBackLight(CurrentColor);
             ColorController.SetFrontLight(CurrentColor);
         });
 
-        TurnOffButton.setOnAction(actionEvent -> ColorController.TurnOffLight());
+        switchLightCheckBox.selectedProperty().addListener(
+            (ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) -> ColorController.SwitchLight());
     }
 }

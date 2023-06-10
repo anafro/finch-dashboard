@@ -7,6 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static javafx.scene.input.KeyCode.*;
+import static ru.anafro.finch.finchrobotproject.ColorController.SwitchLight;
 import static ru.anafro.finch.finchrobotproject.FinchStats.finchDistance;
 import static ru.anafro.finch.finchrobotproject.WindowApplication.currentScene;
 import static ru.anafro.finch.finchrobotproject.WindowApplication.finch;
@@ -14,18 +15,24 @@ import static ru.anafro.finch.finchrobotproject.WindowApplication.finch;
 public class FinchController {
 
     public static boolean safeMode = false;
-    private static boolean activeUp = false;
-    private static boolean activeDown = false;
-    private static boolean activeLeft = false;
-    private static boolean activeRight = false;
-    public static int speed = 10;
 
-    public static boolean lateLoad = false;
+    private static final boolean[] btnStatus = new boolean[] {false, false, false, false}; //W, A, S, D
+    public static int speed = 10;
+    private static final int MAX_SPEED = 100; //[MIN_SPEED - 100]
+    private static final int MIN_SPEED = 10; //[0 - MAX_SPEED]
+    private static final int STEP_SPEED = 15; //[0 - 100]
+
+    private static boolean isShooting = false;
+    private static boolean isAlertDistance = false;
+    private static boolean isSwitchSafeMode = false;
+    private static boolean isSwitchLights = false;
+
+    private static final Timer timer = new Timer();
+
     public static void Start() {
-        if(finch != null) {
-            finch.setMotors(0, 0); // Начальное состояние: робот стоит на месте
-            finch.setBeak(0, 255, 0); // Зеленый светодиод для обозначения работы робота
-            lateLoad = true;
+        if (finch != null) {
+            finch.setMotors(0, 0);
+            finch.setBeak(0, 255, 0);
         }
 
         //Collect finch stats
@@ -35,149 +42,137 @@ public class FinchController {
         currentScene.setOnKeyReleased(FinchController::keyReleased);
     }
 
-    private static boolean isShooting = false;
-    private static boolean isCheckDistancing = false;
     public static void CheckDistance() {
-        if(finchDistance > 0 && finchDistance < 50 && finchDistance < speed) {
-            if(isCheckDistancing)
+        if(!safeMode) return;
+
+        if (finchDistance > 0 && finchDistance < 50 && finchDistance < speed) {
+            if (isAlertDistance)
                 return;
 
-            finch.setBeak(0,0, 255);
+            finch.setBeak(0, 0, 255);
             finch.playNote(64, 1);
-            isCheckDistancing = true;
+            isAlertDistance = true;
         } else {
             ColorController.SetBackLight(null);
             ColorController.SetFrontLight(null);
-            isCheckDistancing = false;
+            isAlertDistance = false;
         }
     }
 
     public static void keyPressed(KeyEvent e) {
-        if(finch == null)
+        if (finch == null)
             return;
-
-        if(lateLoad) {
-            finch.setBeak(0, 255, 0); // Зеленый светодиод для обозначения работы робота
-            lateLoad = false;
-        }
 
         KeyCode code = e.getCode();
         switch (code) {
-            case W: {
-                if(activeUp) return;
-                activeUp = true;
-                break;
-            }
-            case S: {
-                if(activeDown) return;
-                activeDown = true;
-                break;
-            }
-            case A: {
-                if(activeLeft) return;
-                activeLeft = true;
-                break;
-            }
-            case D: {
-                if(activeRight) return;
-                activeRight = true;
-                break;
-            }
-            case E: {
-                if(speed == Math.min(100, speed + 15))
-                    return;
-
-                speed = Math.min(100, speed + 15);
-                break;
-            } // Увеличение скорости на 10%
-            case Q: {
-                if(speed == Math.max(10, speed - 15))
-                    return;
-                speed = Math.max(10, speed - 15);
-                break;
-            } // Уменьшение скорости на 10%
-            case TAB: {
-                if(!isShooting) {
-                    System.out.println("here");
-                    isShooting = true;
-                    finch.playNote(90, 1);
-                    finch.setBeak(255, 0, 0);
-                    final TimerTask StableTail = new TimerTask() {
-                        @Override
-                        public void run() {
-                            finch.setBeak(0, 255, 0);
-                        }
-                    };
-                    timer.schedule(StableTail, 1000);
-                }
-
+            case W -> {
                 e.consume();
-                return;
+                if (btnStatus[0]) return;
+                btnStatus[0] = true;
+                UpdateSpeed();
             }
-            default: return;
+            case S -> {
+                e.consume();
+                if (btnStatus[1]) return;
+                btnStatus[1] = true;
+                UpdateSpeed();
+            }
+            case A -> {
+                e.consume();
+                if (btnStatus[2]) return;
+                btnStatus[2] = true;
+                UpdateSpeed();
+            }
+            case D -> {
+                e.consume();
+                if (btnStatus[3]) return;
+                btnStatus[3] = true;
+                UpdateSpeed();
+            }
+            case E -> {
+                e.consume();
+                if (speed == MAX_SPEED) return;
+                speed = Math.min(MAX_SPEED, speed + STEP_SPEED);
+                UpdateSpeed();
+            }
+            case Q -> {
+                e.consume();
+                if (speed == MIN_SPEED) return;
+                speed = Math.max(MIN_SPEED, speed - STEP_SPEED);
+                UpdateSpeed();
+            }
+            case F -> {
+                e.consume();
+                if(isSwitchLights) return;
+                isSwitchLights = true;
+                SwitchLight();
+            }
+            case X -> {
+                e.consume();
+                if(isSwitchSafeMode) return;
+                isSwitchSafeMode = true;
+                safeMode ^= true;
+                if(!safeMode) {
+                    ColorController.SetBackLight(null);
+                    ColorController.SetFrontLight(null);
+                    isAlertDistance = false;
+                }
+            }
+            case TAB -> {
+                e.consume();
+                if (isShooting) return;
+
+                isShooting = true;
+                finch.playNote(90, 1);
+                finch.setBeak(255, 0, 0);
+                final TimerTask StableTail = new TimerTask() {
+                    @Override
+                    public void run() {
+                        finch.setBeak(0, 255, 0);
+                    }
+                };
+                timer.schedule(StableTail, 1000);
+            }
         }
-        UpdateSpeed();
-        e.consume();
     }
 
-    private static final Timer timer = new Timer();
-
     public static void UpdateSpeed() {
-        int sLeft = 0;
-        int sRight = 0;
-        int count = 0;
-        if(activeUp) { // Движение вперед
-            sLeft += speed;
-            sRight += speed;
-            count++;
+        if (btnStatus[0] == btnStatus[1]) {
+            finch.setMotors(0, 0);
+            return;
         }
 
-        if(activeDown) { // Движение назад
-            sLeft -= speed;
-            sRight -= speed;
-            count++;
+        var moveDirection = (btnStatus[0] ? 1 : -1);
+        int moveSpeed = moveDirection * speed;
+        if (btnStatus[2] == btnStatus[3]) {
+            finch.setMotors(moveSpeed, moveSpeed);
+            return;
         }
 
-        if(activeLeft) { // Поворот влево
-            sLeft -= Math.min(20, speed);
-            sRight += Math.min(20, speed);
-            count++;
-        }
-
-        if(activeRight) { // Поворот вправо
-            sLeft += Math.min(20, speed);
-            sRight -= Math.min(20, speed);
-            count++;
-        }
-
-        if(count > 0) {
-            sLeft = Math.ceilDiv(sLeft, count);
-            sRight = Math.ceilDiv(sRight, count);
-        }
-
-        finch.setMotors(sLeft, sRight);
-        //System.out.println("" + activeUp + " " + activeDown + " " + activeLeft + " " + activeRight);
-}
+        var rotateSpeed = moveDirection * Math.min(20, speed) * (btnStatus[2] ? -1 : 1);
+        finch.setMotors(Math.ceilDiv(moveSpeed + rotateSpeed, 2), Math.ceilDiv(moveSpeed - rotateSpeed, 2));
+    }
 
     public static void keyReleased(KeyEvent e) {
-        if(finch == null)
+        if (finch == null)
             return;
 
         KeyCode code = e.getCode();
-        if(code == W || code == A || code == S || code == D || code == TAB) {
-            switch (code) {
-                case W -> activeUp = false;
-                case S -> activeDown = false;
-                case A -> activeLeft = false;
-                case D -> activeRight = false;
-                case TAB -> {
-                    isShooting = false;
-                    e.consume();
-                    return;
-                }
+        switch (code) {
+            case W -> btnStatus[0] = false;
+            case S -> btnStatus[1] = false;
+            case A -> btnStatus[2] = false;
+            case D -> btnStatus[3] = false;
+            case TAB -> isShooting = false;
+            case F -> isSwitchLights = false;
+            case X -> isSwitchSafeMode = false;
+            default -> {
+                return;
             }
-            UpdateSpeed();
-            e.consume();
         }
+        e.consume();
+
+        if (code == W || code == A || code == S || code == D)
+            UpdateSpeed();
     }
 }
